@@ -1,0 +1,42 @@
+CREATE TABLE patient (
+    patient_id SERIAL PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    phone_number VARCHAR(20) NOT NULL,
+    is_returning_patient BOOLEAN DEFAULT FALSE
+);
+
+CREATE TABLE appointment (
+    appointment_id SERIAL PRIMARY KEY,
+    patient_id INTEGER NOT NULL,
+    appointment_date DATE NOT NULL,
+    appointment_time TIME NOT NULL,
+    reason_for_visit VARCHAR(255),
+    affected_area VARCHAR(255),
+    issue_duration VARCHAR(255),
+    status VARCHAR(50) DEFAULT 'booked',
+
+    FOREIGN KEY (patient_id)
+        REFERENCES patient(patient_id)
+);
+
+
+CREATE TABLE callback_request (
+    callback_id SERIAL PRIMARY KEY,
+    patient_id INTEGER,
+    reason VARCHAR(255),
+    status VARCHAR(50) DEFAULT 'pending',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+    FOREIGN KEY (patient_id)
+        REFERENCES patient(patient_id)
+);
+
+
+CREATE TABLE clinic_info (
+    clinic_id SERIAL PRIMARY KEY,
+    clinic_name VARCHAR(255) NOT NULL,
+    phone_number VARCHAR(20),
+    address VARCHAR(255),
+    working_hours VARCHAR(255),
+    additional_information TEXT
+);

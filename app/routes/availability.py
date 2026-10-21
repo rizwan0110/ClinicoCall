@@ -1,6 +1,8 @@
 from fastapi import APIRouter
 from datetime import datetime, timedelta, date
 from app.database import get_db_connection
+from zoneinfo import ZoneInfo
+from fastapi import HTTPException
 
 
 router = APIRouter()
@@ -42,6 +44,14 @@ def generate_slots():
 
 @router.get("/availability")
 def get_availability(date: date):
+    
+    today = datetime.now(ZoneInfo("Asia/Kolkata")).date()
+
+    if date < today:
+        raise HTTPException(
+            status_code=400,
+            detail="Cannot check availability for a past date"
+        )
 
     all_slots = generate_slots()
 
@@ -67,12 +77,23 @@ def get_availability(date: date):
         appointment[0].strftime("%H:%M")
         for appointment in booked_appointments
     ]
-
     available_slots = [
-        slot
-        for slot in all_slots
-        if slot not in booked_slots
+    slot
+    for slot in all_slots
+    if slot not in booked_slots
     ]
+
+    # Exclude elapsed appointment slots when checking today
+    now = datetime.now(ZoneInfo("Asia/Kolkata"))
+
+    if date == now.date():
+        current_time = now.strftime("%H:%M")
+
+        available_slots = [
+            slot
+            for slot in available_slots
+            if slot > current_time
+        ]
 
     return {
         "date": date,

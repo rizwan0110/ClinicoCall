@@ -1,9 +1,11 @@
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
-from datetime import date, time
-
+from datetime import date, time,datetime
+from zoneinfo import ZoneInfo
 from app.database import get_db_connection
 from app.routes.availability import generate_slots
+
+
 
 router = APIRouter()
 
@@ -22,16 +24,26 @@ def create_appointment(appointment: AppointmentCreate):
 
     connection = get_db_connection()
     cursor = connection.cursor()
-
+    
     # 1. Check past date
-    if appointment.appointment_date < date.today():
+    now = datetime.now(ZoneInfo("Asia/Kolkata"))
+
+    if appointment.appointment_date < now.date():
         cursor.close()
         connection.close()
-
         raise HTTPException(
             status_code=400,
             detail="Appointment date cannot be in the past"
         )
+
+    if appointment.appointment_date == now.date():
+        if appointment.appointment_time <= now.time():
+            cursor.close()
+            connection.close()
+            raise HTTPException(
+                status_code=400,
+                detail="Cannot book an appointment for a time that has already passed"
+            )
 
     # 2. Check patient exists
     cursor.execute(
@@ -127,7 +139,13 @@ def create_appointment(appointment: AppointmentCreate):
     cursor.close()
     connection.close()
 
+
     return {
+        "success": True,
         "message": "Appointment booked successfully",
-        "appointment_id": appointment_id
+        "appointment_id": appointment_id,
+        "patient_id": appointment.patient_id,
+        "appointment_date": appointment.appointment_date.isoformat(),
+        "appointment_time": appointment.appointment_time.strftime("%H:%M"),
+        "status": "booked"
     }

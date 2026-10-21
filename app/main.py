@@ -1,38 +1,89 @@
-from fastapi import FastAPI
+
+import logging
+
+from fastapi import FastAPI, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
+
 from app.database import get_db_connection
-from app.routes import availability
-from app.routes import appointments
-from app.routes import callbacks
-from app.routes import clinic_info
+from app.routes import (
+    availability,
+    appointments,
+    callbacks,
+    clinic_info,
+    chats,
+    vapi_tools,
+    current_datetime,
+    dashboard,
+)
+
+# Basic application logging
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 app = FastAPI()
+
+# Register existing routers
 app.include_router(availability.router)
 app.include_router(appointments.router)
 app.include_router(callbacks.router)
 app.include_router(clinic_info.router)
+app.include_router(chats.router)
+app.include_router(vapi_tools.router)
+app.include_router(current_datetime.router)
+app.include_router(dashboard.router)
+
+# CORS configuration — kept unchanged
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=[
+        "http://localhost:5173",
+        "http://localhost:5174",
+        "http://127.0.0.1:5173",
+        "http://127.0.0.1:5174",
+    ],
+    allow_credentials=False,
+    allow_methods=["GET", "PATCH"],
+    allow_headers=["Content-Type"],
+)
+
 
 @app.get("/")
-async def root():
-    return {"Hello"}
+def root():
+    return {"message": "ClinicoCall API is running"}
+
 
 @app.get("/health")
-async def health():
+def health():
     return {"status": "healthy"}
+
 
 @app.get("/db-test")
 def test_database():
-    connection = get_db_connection()
+    connection = None
+    cursor = None
 
-    cursor = connection.cursor()
-    cursor.execute("SELECT current_database();")
+    try:
+        connection = get_db_connection()
+        cursor = connection.cursor()
+        cursor.execute("SELECT current_database();")
 
-    database_name = cursor.fetchone()
+        database_name = cursor.fetchone()
 
-    cursor.close()
-    connection.close()
+        return {
+            "database": database_name[0],
+            "status": "connected",
+        }
 
-    return {
-        "database": database_name[0],
-        "status": "connected"
-    }
+    except Exception:
+        logger.exception("Database connectivity check failed")
+        raise HTTPException(
+            status_code=503,
+            detail="Database connection check failed",
+        )
 
+    finally:
+        if cursor is not None:
+            cursor.close()
+
+        if connection is not None:
+            connection.close()

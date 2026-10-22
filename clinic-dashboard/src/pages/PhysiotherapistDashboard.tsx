@@ -25,7 +25,7 @@ type Appointment = {
   phone_number?: string
   reason_for_visit: string | null
   affected_area?: string | null
-  duration?: string | number | null
+  issue_duration?: string | number | null
   status: string
 }
 
@@ -243,12 +243,12 @@ function PhysiotherapistDashboard() {
                           </p>
                         )}
 
-                        {appointment.duration != null && (
+                        {appointment.issue_duration != null && (
                           <p className="text-sm text-slate-600">
                             <span className="font-medium">
                               Duration:
                             </span>{" "}
-                            {appointment.duration}
+                            {appointment.issue_duration}
                           </p>
                         )}
                       </div>

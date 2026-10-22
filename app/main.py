@@ -4,6 +4,7 @@ import logging
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 
+
 from app.database import get_db_connection
 from app.routes import (
     availability,
@@ -65,12 +66,11 @@ def test_database():
     try:
         connection = get_db_connection()
         cursor = connection.cursor()
-        cursor.execute("SELECT current_database();")
-
-        database_name = cursor.fetchone()
+        cursor.execute("SELECT current_database()")
+        database_name = cursor.fetchone()[0]
 
         return {
-            "database": database_name[0],
+            "database": database_name,
             "status": "connected",
         }
 
@@ -84,6 +84,5 @@ def test_database():
     finally:
         if cursor is not None:
             cursor.close()
-
         if connection is not None:
             connection.close()

@@ -45,158 +45,175 @@ def detect_intent(message: str):
     return "unknown"
 
 
-# ---------------------------------------------------
+
 # DATABASE HELPERS
-# ---------------------------------------------------
 
 def create_patient(name: str, phone_number: str):
+    connection = None
+    cursor = None
 
-    connection = get_db_connection()
-    cursor = connection.cursor()
+    try:
+        connection = get_db_connection()
+        cursor = connection.cursor()
 
-    cursor.execute(
-        """
-        INSERT INTO patient (
-            name,
-            phone_number,
-            is_returning_patient
+        cursor.execute(
+            """
+            INSERT INTO patient (
+                name,
+                phone_number,
+                is_returning_patient
+            )
+            VALUES (%s, %s, %s)
+            RETURNING patient_id
+            """,
+            (name, phone_number, False),
         )
-        VALUES (%s, %s, %s)
-        RETURNING patient_id;
-        """,
-        (
-            name,
-            phone_number,
-            False
-        )
-    )
 
-    patient_id = cursor.fetchone()[0]
+        patient_id = cursor.fetchone()[0]
+        connection.commit()
+        return patient_id
 
-    connection.commit()
-    cursor.close()
-    connection.close()
-
-    return patient_id
+    finally:
+        if cursor is not None:
+            cursor.close()
+        if connection is not None:
+            connection.close()
 
 
 def find_patient_by_phone(phone_number: str):
+    connection = None
+    cursor = None
 
-    connection = get_db_connection()
-    cursor = connection.cursor()
+    try:
+        connection = get_db_connection()
+        cursor = connection.cursor()
 
-    cursor.execute(
-        """
-        SELECT patient_id, name
-        FROM patient
-        WHERE phone_number = %s
-        """,
-        (phone_number,)
-    )
+        cursor.execute(
+            """
+            SELECT patient_id, name
+            FROM patient
+            WHERE phone_number = %s
+            """,
+            (phone_number,),
+        )
 
-    patient = cursor.fetchone()
+        return cursor.fetchone()
 
-    cursor.close()
-    connection.close()
-
-    return patient
+    finally:
+        if cursor is not None:
+            cursor.close()
+        if connection is not None:
+            connection.close()
 
 
 def get_clinic_info():
+    connection = None
+    cursor = None
 
-    connection = get_db_connection()
-    cursor = connection.cursor()
+    try:
+        connection = get_db_connection()
+        cursor = connection.cursor()
 
-    cursor.execute(
-        """
-        SELECT
-            clinic_name,
-            phone_number,
-            address,
-            working_hours,
-            additional_information
-        FROM clinic_info
-        LIMIT 1;
-        """
-    )
+        cursor.execute(
+            """
+            SELECT
+                clinic_name,
+                phone_number,
+                address,
+                working_hours,
+                additional_information
+            FROM clinic_info
+            LIMIT 1
+            """
+        )
 
-    clinic = cursor.fetchone()
+        return cursor.fetchone()
 
-    cursor.close()
-    connection.close()
-
-    return clinic
+    finally:
+        if cursor is not None:
+            cursor.close()
+        if connection is not None:
+            connection.close()
 
 
 def create_appointment_from_session(session):
+    connection = None
+    cursor = None
 
-    connection = get_db_connection()
-    cursor = connection.cursor()
+    try:
+        connection = get_db_connection()
+        cursor = connection.cursor()
 
-    cursor.execute(
-        """
-        INSERT INTO appointment (
-            patient_id,
-            appointment_date,
-            appointment_time,
-            reason_for_visit,
-            affected_area,
-            issue_duration,
-            status
+        cursor.execute(
+            """
+            INSERT INTO appointment (
+                patient_id,
+                appointment_date,
+                appointment_time,
+                reason_for_visit,
+                affected_area,
+                issue_duration,
+                status
+            )
+            VALUES (%s, %s, %s, %s, %s, %s, %s)
+            RETURNING appointment_id
+            """,
+            (
+                session["patient_id"],
+                session["appointment_date"],
+                session["appointment_time"],
+                session["reason_for_visit"],
+                session["affected_area"],
+                session["issue_duration"],
+                "booked",
+            ),
         )
-        VALUES (%s, %s, %s, %s, %s, %s, %s)
-        RETURNING appointment_id;
-        """,
-        (
-            session["patient_id"],
-            session["appointment_date"],
-            session["appointment_time"],
-            session["reason_for_visit"],
-            session["affected_area"],
-            session["issue_duration"],
-            "booked"
-        )
-    )
 
-    appointment_id = cursor.fetchone()[0]
+        appointment_id = cursor.fetchone()[0]
+        connection.commit()
+        return appointment_id
 
-    connection.commit()
-    cursor.close()
-    connection.close()
-
-    return appointment_id
+    finally:
+        if cursor is not None:
+            cursor.close()
+        if connection is not None:
+            connection.close()
 
 
 def create_callback_from_session(session):
+    connection = None
+    cursor = None
 
-    connection = get_db_connection()
-    cursor = connection.cursor()
+    try:
+        connection = get_db_connection()
+        cursor = connection.cursor()
 
-    cursor.execute(
-        """
-        INSERT INTO callback_request (
-            patient_id,
-            reason,
-            status
+        cursor.execute(
+            """
+            INSERT INTO callback_request (
+                patient_id,
+                reason,
+                status
+            )
+            VALUES (%s, %s, %s)
+            RETURNING callback_id
+            """,
+            (
+                session["patient_id"],
+                session["reason"],
+                "pending",
+            ),
         )
-        VALUES (%s, %s, %s)
-        RETURNING callback_id;
-        """,
-        (
-            session["patient_id"],
-            session["reason"],
-            "pending"
-        )
-    )
 
-    callback_id = cursor.fetchone()[0]
+        callback_id = cursor.fetchone()[0]
+        connection.commit()
+        return callback_id
 
-    connection.commit()
-    cursor.close()
-    connection.close()
-
-    return callback_id
-
+    finally:
+        if cursor is not None:
+            cursor.close()
+        if connection is not None:
+            connection.close()
 
 # ---------------------------------------------------
 # CHAT ENDPOINT

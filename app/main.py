@@ -33,7 +33,8 @@ app.include_router(vapi_tools.router)
 app.include_router(current_datetime.router)
 app.include_router(dashboard.router)
 
-# CORS configuration — kept unchanged
+# CORS configuration 
+
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
@@ -41,11 +42,13 @@ app.add_middleware(
         "http://localhost:5174",
         "http://127.0.0.1:5173",
         "http://127.0.0.1:5174",
+        "https://clinico-call.vercel.app",
     ],
     allow_credentials=False,
-    allow_methods=["GET", "PATCH"],
+    allow_methods=["GET", "PATCH", "OPTIONS"],
     allow_headers=["Content-Type"],
 )
+
 
 
 @app.get("/")

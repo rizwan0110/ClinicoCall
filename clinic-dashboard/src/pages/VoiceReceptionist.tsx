@@ -107,7 +107,7 @@ export default function VoiceReceptionist() {
         </h1>
 
         <p className="mt-2 text-slate-500">
-          AI Voice Receptionist for KLIC Physiotherapy Clinic
+          AI Voice Receptionist for XYZ Physiotherapy Clinic
         </p>
 
         <div className="my-10">

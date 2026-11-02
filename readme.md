@@ -24,6 +24,14 @@ Patients may want to book an appointment when the clinic is closed or reception 
 
 The assistant checks fixed appointment slots before confirming a booking. This helps clinics organise their schedules, gives patients a clearer appointment time, and helps reduce unnecessary waiting and scheduling conflicts.
 
+## Live Demo
+
+Explore the different parts of ClinicoCall:
+
+- **[Voice Receptionist](https://clinico-call.vercel.app/)** – Interact with the AI receptionist through voice.
+- **[Receptionist Dashboard](https://clinico-call.vercel.app/receptionist)** – View and manage appointments and callback requests.
+- **[Physiotherapist Dashboard](https://clinico-call.vercel.app/physiotherapist)** – View patient appointment information.
+
 ## Features
 
 - **Voice-based interaction:** Patients can speak naturally with the AI receptionist.
@@ -40,11 +48,11 @@ The assistant checks fixed appointment slots before confirming a booking. This h
 
 ![ClinicoCall Voice Interface](docs/images/voice_interface.png)
 
-### Patient Dashboard
+### Receptionist Dashboard
 
 ![Receptionist Dashboard](docs/images/receptionist_dashboard.png)
 
-### Doctor Dashboard
+### Physiotherapist Dashboard
 
 ![Physiotherapist Dashboard](docs/images/physiotherapist_dashboard.png)
 
@@ -112,9 +120,8 @@ This keeps the voice conversation separate from the application's business logic
 
 The diagram below will show how the voice assistant, backend, database, and dashboards communicate with each other.
 
-<!-- SYSTEM ARCHITECTURE DIAGRAM WILL BE ADDED HERE -->
 
-<!-- Add architecture diagram here -->
+![ClinicoCall Voice Interface](docs/images/Architecture.png)
 
 ## Technology Stack
 

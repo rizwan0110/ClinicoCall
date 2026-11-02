@@ -1,10 +1,28 @@
 # ClinicoCall – AI Voice Receptionist for Physiotherapy Clinics
 
-ClinicoCall is an AI voice receptionist built for physiotherapy clinics. It allows patients to interact with a virtual receptionist through natural voice conversations.
+ClinicoCall is an AI-powered voice receptionist built for physiotherapy clinics. It helps clinics handle routine patient interactions, appointment bookings, and basic information collection through natural voice conversations.
 
-Patients can book appointments, check availability, ask questions about the clinic, and request callbacks without having to speak directly with reception staff.
+The idea behind ClinicoCall is simple: doctors should spend more time treating patients and less time handling routine administrative tasks.
 
-The project uses voice AI, a backend API, a PostgreSQL database, and web dashboards to make common clinic tasks easier.
+The voice assistant helps collect initial information from patients, such as their issue, affected area, and how long they have been experiencing it. It also allows patients to book appointments outside regular clinic hours, so clinics don't miss potential bookings when reception staff are unavailable.
+
+By managing bookings through fixed appointment slots, ClinicoCall also helps clinics organise patient visits and reduce scheduling confusion.
+
+## Problem and Value
+
+ClinicoCall focuses on three common challenges faced by physiotherapy clinics.
+
+**1. Reducing routine work for doctors**
+
+Doctors often spend time asking patients basic questions, such as what their problem is, which area is affected, and when the issue started. The voice assistant collects this initial information before the appointment, helping reduce repetitive questioning and allowing doctors to focus more on patient care.
+
+**2. Accepting bookings outside clinic hours**
+
+Patients may want to book an appointment when the clinic is closed or reception staff are unavailable. ClinicoCall allows patients to interact with the assistant and request appointments through the voice interface beyond regular clinic hours, helping clinics avoid missing potential bookings.
+
+**3. Making appointment scheduling easier**
+
+The assistant checks fixed appointment slots before confirming a booking. This helps clinics organise their schedules, gives patients a clearer appointment time, and helps reduce unnecessary waiting and scheduling conflicts.
 
 ## Features
 

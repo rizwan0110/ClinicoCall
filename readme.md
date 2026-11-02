@@ -30,8 +30,8 @@ Explore the different parts of ClinicoCall:
 
 - **[Voice Receptionist](https://clinico-call.vercel.app/)** – Interact with the AI receptionist through voice.
 - **[Receptionist Dashboard](https://clinico-call.vercel.app/receptionist)** – View and manage appointments and callback requests.
-- **[Physiotherapist Dashboard](https://clinico-call.vercel.app/physiotherapist)** – View patient appointment information.
-
+- **[Physiotherapist Dashboard](https://clinico-call.vercel.app/physiotherapist)** – View patient appointment information.\
+- **[Demo](https://clinico-call.vercel.app/physiotherapist)** – Demo Video
 ## Features
 
 - **Voice-based interaction:** Patients can speak naturally with the AI receptionist.
